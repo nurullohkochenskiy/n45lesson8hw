@@ -158,7 +158,7 @@ export default function Teacherlist({ filteringItems }) {
               <TableCell>{row.level}</TableCell>
               <TableCell>{row.groups.join(",")}</TableCell>
               <TableCell align="right">
-                <Button variant="container">Edit</Button>
+                <Button variant="contained"  sx={{mr: 1}}>Edit</Button>
                 <Button variant="outlined" color="error" onClick={()  => handleDeletebtn(row.id)}>Delete</Button>
               </TableCell>
             </TableRow>
