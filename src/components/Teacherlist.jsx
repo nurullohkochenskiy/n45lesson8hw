@@ -145,7 +145,6 @@ export default function Teacherlist({ filteringItems }) {
             <StyledTableCell>Level</StyledTableCell>
             <StyledTableCell>Groups</StyledTableCell>
             <StyledTableCell align="right">Actions</StyledTableCell>
-            {/* <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>   style={{width: "100px"}} */}
           </TableRow>
         </TableHead>
         <TableBody>

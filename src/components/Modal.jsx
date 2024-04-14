@@ -15,7 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { createTeacher, editTeacher, getTeacher } from "../redux/teachers/teachersActions";
+import {  editTeacher } from "../redux/teachers/teachersActions";
 import { useForm, Controller } from "react-hook-form";
 
 const style = {
@@ -43,7 +43,7 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
 
   const handleClose = () => {
     setOpen(false);
-    reset(); // Reset form fields and errors when modal is closed
+    reset(); 
   };
   const handleModalOpen = () => {
     setOpen(true);

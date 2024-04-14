@@ -29,12 +29,12 @@ export const fetchTeachersError = (error) => {
     payload: error,
   };
 };
-export const getTeacher = (id)=>{
+export const getTeacher = (id) => {
   return {
     type: GET_TEACHER,
     payload: Number(id),
   };
-}
+};
 export const createTeacher = ({ firstname, lastname, level, groups }) => {
   function findHighestId(teachers) {
     let highestId = 0;

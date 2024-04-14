@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { filterTeacher } from "../redux/teachers/teachersActions";
+import { filterStudent } from "../redux/students/studentsActions";
 
-const SearchTeacher = ({ filteringItems, setFilteringItems }) => {
+const SearchBar = ({ filteringItems, setFilteringItems }) => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(filterTeacher(filteringItems));
+    // dispatch(filterStudent(filteringItems))
   }, [dispatch, filteringItems]);
 
   const handleSearch = (e) => {
@@ -29,4 +31,4 @@ const SearchTeacher = ({ filteringItems, setFilteringItems }) => {
   );
 };
 
-export default SearchTeacher;
+export default SearchBar;
