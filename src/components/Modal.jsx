@@ -14,8 +14,8 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { createTeacher } from "../redux/teachers/teachersActions";
+import { useDispatch, useSelector } from "react-redux";
+import { createTeacher, editTeacher, getTeacher } from "../redux/teachers/teachersActions";
 import { useForm, Controller } from "react-hook-form";
 
 const style = {
@@ -29,7 +29,7 @@ const style = {
   p: 4,
 };
 
-export default function TransitionsModal({ typeModal }) {
+export default function TransitionsModal({ id, typeModal, namebtn }) {
   const [open, setOpen] = React.useState(false);
   const {
     handleSubmit,
@@ -38,23 +38,27 @@ export default function TransitionsModal({ typeModal }) {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
-
+  const { foundTeacher } = useSelector((state) => state.teachers);
   const groups = ["n45", "n46"];
 
   const handleClose = () => {
     setOpen(false);
     reset(); // Reset form fields and errors when modal is closed
   };
-
-  const onSubmit = (data) => {
-    dispatch(createTeacher(data));
-    handleClose();
+  const handleModalOpen = () => {
+    setOpen(true);
   };
 
+  const onSubmit = (data) => {
+    const fixedData = { id: id, ...data };
+    dispatch(editTeacher(fixedData));
+    handleClose();
+  };
+  console.log(foundTeacher);
   return (
     <div>
-      <Button variant="contained" onClick={() => setOpen(true)}>
-        Add a teacher
+      <Button variant="contained" onClick={handleModalOpen}>
+        {namebtn}
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -74,7 +78,9 @@ export default function TransitionsModal({ typeModal }) {
             <Controller
               name="firstname"
               control={control}
-              defaultValue=""
+              defaultValue={
+                typeModal == "add" ? "" : `${foundTeacher.firstname}`
+              }
               rules={{ required: "First name is required" }}
               render={({ field }) => (
                 <TextField
@@ -91,7 +97,9 @@ export default function TransitionsModal({ typeModal }) {
             <Controller
               name="lastname"
               control={control}
-              defaultValue=""
+              defaultValue={
+                typeModal == "add" ? "" : `${foundTeacher.lastname}`
+              }
               rules={{ required: "Last name is required" }}
               render={({ field }) => (
                 <TextField
@@ -108,11 +116,11 @@ export default function TransitionsModal({ typeModal }) {
             <Controller
               name="level"
               control={control}
-              defaultValue=""
+              defaultValue={typeModal == "add" ? "" : `${foundTeacher.level}`}
               rules={{ required: "Level is required" }}
               render={({ field }) => (
                 <>
-                  <InputLabel sx={{mt: 2}} id="demo-multiple-checkbox-label">
+                  <InputLabel sx={{ mt: 2 }} id="demo-multiple-checkbox-label">
                     Level:
                   </InputLabel>
                   <Select
@@ -143,7 +151,7 @@ export default function TransitionsModal({ typeModal }) {
             <Controller
               name="groups"
               control={control}
-              defaultValue={[]}
+              defaultValue={typeModal == "add" ? [] : foundTeacher.groups}
               rules={{ required: "At least one group must be selected" }}
               render={({ field }) => (
                 <>

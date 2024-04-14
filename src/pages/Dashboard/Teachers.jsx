@@ -32,7 +32,7 @@ const Teachers = () => {
         mb={5}
       >
         <SearchTeacher filteringItems={filteringItems} setFilteringItems={setFilteringItems} />
-        <TransitionsModal typeModal={"add"}/>
+        <TransitionsModal typeModal={"add"} namebtn = {"Add a teacher"}/>
           
         <FilterTeacher filteringItems={filteringItems} setFilteringItems={setFilteringItems} />
       </Stack>

@@ -18,7 +18,8 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead, Typography } from "@mui/material";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTeacher } from "../redux/teachers/teachersActions";
+import { deleteTeacher, getTeacher } from "../redux/teachers/teachersActions";
+import TransitionsModal from "./Modal";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "black",
@@ -102,6 +103,7 @@ function createData(order, id, firstname, lastname, level, groups) {
 }
 
 export default function Teacherlist({ filteringItems }) {
+  const [selectedTeacherId, setSelectedTeacherId] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { teachers, filtered } = useSelector((state) => state.teachers);
@@ -127,6 +129,10 @@ export default function Teacherlist({ filteringItems }) {
   const dispatch = useDispatch();
   const handleDeletebtn = (id) => {
     dispatch(deleteTeacher(id));
+  };
+  const handleEditClick = (e) => {
+    setSelectedTeacherId(e.currentTarget.id);
+    dispatch(getTeacher(e.currentTarget.id))
   };
   return (
     <TableContainer component={Paper}>
@@ -158,8 +164,21 @@ export default function Teacherlist({ filteringItems }) {
               <TableCell>{row.level}</TableCell>
               <TableCell>{row.groups.join(",")}</TableCell>
               <TableCell align="right">
-                <Button variant="contained"  sx={{mr: 1}}>Edit</Button>
-                <Button variant="outlined" color="error" onClick={()  => handleDeletebtn(row.id)}>Delete</Button>
+                <Box display={"flex"} justifyContent={"flex-end"}>
+                  <div onClick={handleEditClick} id={row.id}>
+                    {" "}
+                    <TransitionsModal id={selectedTeacherId} typeModal={"edit"} namebtn={"Edit"} />
+                  </div>
+
+                  <Button
+                    sx={{ ml: 1 }}
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleDeletebtn(row.id)}
+                  >
+                    Delete
+                  </Button>
+                </Box>
               </TableCell>
             </TableRow>
           ))}

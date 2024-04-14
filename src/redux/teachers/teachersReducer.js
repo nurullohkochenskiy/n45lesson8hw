@@ -2,6 +2,7 @@ import {
   FETCH_TEACHERS_ERROR,
   FETCH_TEACHERS_REQUEST,
   FETCH_TEACHERS_SUCCESS,
+  GET_TEACHER,
   CREATE_TEACHER,
   DELETE_TEACHER,
   EDIT_TEACHER,
@@ -15,6 +16,7 @@ const initialState = {
   inpVal: "",
   filtered: [],
   filteredStatus: false,
+  foundTeacher: {},
 };
 
 const teachersReducer = (state = initialState, action) => {
@@ -37,6 +39,14 @@ const teachersReducer = (state = initialState, action) => {
         teachers: [],
         error: action.payload,
       };
+    case GET_TEACHER:
+      const foundTeacher = state.teachers.find(
+        (teacher) => teacher.id == action.payload
+      );
+      return {
+        ...state,
+        foundTeacher: foundTeacher,
+      };
     case CREATE_TEACHER:
       const newTeachers = [...state.teachers, action.payload];
       localStorage.setItem("teachers", JSON.stringify(newTeachers));
@@ -54,11 +64,13 @@ const teachersReducer = (state = initialState, action) => {
         teachers: newList,
       };
     case EDIT_TEACHER:
+      const ListAfterEdit = state.teachers.map((teacher) =>
+        teacher.id === action.payload.id ? action.payload : teacher
+      );
+      localStorage.setItem("teachers", JSON.stringify(ListAfterEdit));
       return {
         ...state,
-        teachers: state.teachers.map((teacher) =>
-          teacher.id === action.payload.id ? action.payload : teacher
-        ),
+        teachers: ListAfterEdit,
       };
     //! Filter start
     case FILTER_TEACHER:
