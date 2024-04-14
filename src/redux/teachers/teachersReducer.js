@@ -38,9 +38,11 @@ const teachersReducer = (state = initialState, action) => {
         error: action.payload,
       };
     case CREATE_TEACHER:
+      const newTeachers = [...state.teachers, action.payload];
+      localStorage.setItem("teachers", JSON.stringify(newTeachers));
       return {
         ...state,
-        teachers: [...state.teachers, action.payload],
+        teachers: newTeachers,
       };
     case DELETE_TEACHER:
       const newList = state.teachers.filter(

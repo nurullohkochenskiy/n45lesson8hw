@@ -6,7 +6,7 @@ import {
   FETCH_TEACHERS_ERROR,
   FETCH_TEACHERS_REQUEST,
   FETCH_TEACHERS_SUCCESS,
-  FILTER_TEACHER
+  FILTER_TEACHER,
 } from "./teachersTypes";
 
 export const fetchTeachersRequest = () => {
@@ -29,13 +29,32 @@ export const fetchTeachersError = (error) => {
   };
 };
 
-export const createTeacher = (teacher) => {
-  return {
-    type: CREATE_TEACHER,
-    payload: teacher,
+export const createTeacher = ({ firstname, lastname, level, groups }) => {
+  function findHighestId(teachers) {
+    let highestId = 0;
+    for (const teacher of teachers) {
+      if (Number(teacher.id) > highestId) {
+        highestId = teacher.id;
+      }
+    }
+    return highestId;
+  }
+  return (dispatch, getState) => {
+    const { teachers } = getState().teachers;
+    const highestId = findHighestId(teachers);
+    const teacherData = {
+      id: String(Number(highestId) + 1),
+      firstname: firstname,
+      lastname: lastname,
+      level: level,
+      groups: groups,
+    };
+    dispatch({
+      type: CREATE_TEACHER,
+      payload: teacherData,
+    });
   };
 };
-
 export const deleteTeacher = (id) => {
   return {
     type: DELETE_TEACHER,
@@ -66,21 +85,9 @@ export const fetchTeachers = () => {
   };
 };
 
-// export const searchTeacher = (searched) => {
-//   return {
-//     type: SEARCH_TEACHER,
-//     payload: searched,
-//   };
-// };
-// export const filterLevelTeacher = (filtered) => {
-//   return {
-//     type: FILTER_LEVEL_TEACHER,
-//     payload: filtered,
-//   };
-// };
-export const filterTeacher = (filteringItems)=>{
-  return{
+export const filterTeacher = (filteringItems) => {
+  return {
     type: FILTER_TEACHER,
-    payload: filteringItems
-  }
-}
+    payload: filteringItems,
+  };
+};

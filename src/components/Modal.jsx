@@ -14,7 +14,9 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { createTeacher } from "../redux/teachers/teachersActions";
+import { useForm, Controller } from "react-hook-form";
 
 const style = {
   position: "absolute",
@@ -27,41 +29,31 @@ const style = {
   p: 4,
 };
 
-export default function TransitionsModal() {
+export default function TransitionsModal({ typeModal }) {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [levelFilt, setLevelFilt] = React.useState("");
-  const [groupPicker, setGroupPicker] = React.useState([]);
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const dispatch = useDispatch();
+
   const groups = ["n45", "n46"];
-  const handleChangeLevel = (e) => {
-    setLevelFilt(e.target.value);
-    // setFilteringItems({ ...filteringItems, levelFilt: e.target.value });
+
+  const handleClose = () => {
+    setOpen(false);
+    reset(); // Reset form fields and errors when modal is closed
   };
-  const handleChangeGroups = (event) => {
-    const {
-      target: { value },
-    } = event;
-    console.log(value);
-    // setFilteringItems({ ...filteringItems, groupPicker: value });
-    setGroupPicker(typeof value === "string" ? value.split(",") : value);
+
+  const onSubmit = (data) => {
+    dispatch(createTeacher(data));
+    handleClose();
   };
-  const handleSubmit = (e)=>{
-    e.preventDefault();
-  }
+
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen}>
+      <Button variant="contained" onClick={() => setOpen(true)}>
         Add a teacher
       </Button>
       <Modal
@@ -78,56 +70,113 @@ export default function TransitionsModal() {
         }}
       >
         <Fade in={open}>
-          <Box component="form" onSubmit={handleSubmit} sx={style} >
-            <TextField
-              sx={{ width: "100%" }}
-              required
-              id="outlined-required"
-              label="Firstname"
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={style}>
+            <Controller
+              name="firstname"
+              control={control}
+              defaultValue=""
+              rules={{ required: "First name is required" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  sx={{ width: "100%" }}
+                  required
+                  label="Firstname"
+                  error={!!errors.firstname}
+                  helperText={errors.firstname && errors.firstname.message}
+                  variant={errors.firstname ? "outlined" : "standard"}
+                />
+              )}
             />
-            <TextField
-              sx={{ mt: 2, width: "100%" }}
-              required
-              id="outlined-required"
-              label="Lastname"
+            <Controller
+              name="lastname"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Last name is required" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  sx={{ mt: 2, width: "100%" }}
+                  required
+                  label="Lastname"
+                  error={!!errors.lastname}
+                  helperText={errors.lastname && errors.lastname.message}
+                  variant={errors.lastname ? "outlined" : "standard"}
+                />
+              )}
             />
-            <Box mt={2} display={"flex"} alignItems={"center"} gap={"20px"}>
-              <Typography>Choose level:</Typography>
-              {/* <InputLabel id="demo-multiple-checkbox-label">Level</InputLabel> */}
-              <Select
-                labelId="demo-simple-select-label"
-                placeholder="Choose level"
-                id="demo-simple-select"
-                value={levelFilt}
-                label="level"
-                onChange={handleChangeLevel}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={"Junior"}>Junior</MenuItem>
-                <MenuItem value={"Middle"}>Middle</MenuItem>
-                <MenuItem value={"Senior"}>Senior</MenuItem>
-              </Select>
-            </Box>
-            <Box mt={2} display={"flex"} alignItems={"center"} gap={"20px"}>
-              <Typography>Choose groups:</Typography>
-              <Select
-                multiple
-                value={groupPicker}
-                onChange={handleChangeGroups}
-                input={<OutlinedInput label="Groups" />}
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
-              >
-                {groups.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <Checkbox checked={groupPicker.indexOf(name) > -1} />
-                    <ListItemText primary={name} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
+            <Controller
+              name="level"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Level is required" }}
+              render={({ field }) => (
+                <>
+                  <InputLabel sx={{mt: 2}} id="demo-multiple-checkbox-label">
+                    Level:
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    {...field}
+                    required
+                    label="Level"
+                    placeholder="Choose level"
+                    error={!!errors.level}
+                    sx={{
+                      mb: 2,
+                      minWidth: 120,
+                      borderColor: errors.level ? "red" : undefined,
+                    }}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={"junior"}>Junior</MenuItem>
+                    <MenuItem value={"middle"}>Middle</MenuItem>
+                    <MenuItem value={"senior"}>Senior</MenuItem>
+                  </Select>
+                </>
+              )}
+            />
+
+            <Controller
+              name="groups"
+              control={control}
+              defaultValue={[]}
+              rules={{ required: "At least one group must be selected" }}
+              render={({ field }) => (
+                <>
+                  <InputLabel id="demo-multiple-checkbox-label">
+                    Groups:
+                  </InputLabel>
+                  <Select
+                    labelId="demo-multiple-checkbox-label"
+                    id="demo-multiple-checkbox"
+                    {...field}
+                    multiple
+                    label="Groups"
+                    input={<OutlinedInput />}
+                    renderValue={(selected) => selected.join(", ")}
+                    error={!!errors.groups}
+                    sx={{
+                      minWidth: 120,
+                      borderColor: errors.groups ? "red" : undefined,
+                    }}
+                  >
+                    {groups.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        <Checkbox checked={field.value.indexOf(name) > -1} />
+                        <ListItemText primary={name} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.groups && (
+                    <Typography color="red">{errors.groups.message}</Typography>
+                  )}
+                </>
+              )}
+            />
             <Button
               type="submit"
               fullWidth
