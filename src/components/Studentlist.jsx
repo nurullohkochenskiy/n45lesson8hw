@@ -18,8 +18,8 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead, Typography } from "@mui/material";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTeacher, getTeacher } from "../redux/teachers/teachersActions";
-import TransitionsModal from "./TeachersModal";
+import { deleteStudent, getStudent } from "../redux/students/studentsActions";
+import TransitionsModal from "./StudentsModal";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "black",
@@ -98,24 +98,24 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(order, id, firstname, lastname, level, groups) {
-  return { order, id, firstname, lastname, level, groups };
+function createData(order, id, firstname, lastname,  group) {
+  return { order, id, firstname, lastname,  group };
 }
 
-export default function Teacherlist({ filteringItems }) {
-  const [selectedTeacherId, setSelectedTeacherId] = React.useState(null);
+export default function Studentlist({ filteringItems }) {
+  const [selectedStudentId, setSelectedStudentId] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { teachers, filtered } = useSelector((state) => state.teachers);
-  const allRows = teachers.map((teacher, index) => {
-    const { id, firstname, lastname, level, groups } = teacher;
-    return createData(index, id, firstname, lastname, level, groups);
+  const { students, filtered } = useSelector((state) => state.students);
+  const allRows = students.map((student, index) => {
+    const { id, firstname, lastname,  group } = student;
+    return createData(index, id, firstname, lastname,  group);
   });
-  const filteredRows = filtered.map((teacher, index) => {
-    const { id, firstname, lastname, level, groups } = teacher;
-    return createData(index, id, firstname, lastname, level, groups);
+  const filteredRows = filtered.map((student, index) => {
+    const { id, firstname, lastname,  group } = student;
+    return createData(index, id, firstname, lastname,  group);
   });
-  const { filteredStatus } = useSelector((state) => state.teachers);
+  const { filteredStatus } = useSelector((state) => state.students);
   const rows = filteredStatus ? filteredRows : allRows;
 
   const handleChangePage = (event, newPage) => {
@@ -128,11 +128,11 @@ export default function Teacherlist({ filteringItems }) {
   };
   const dispatch = useDispatch();
   const handleDeletebtn = (id) => {
-    dispatch(deleteTeacher(id));
+    dispatch(deleteStudent(id));
   };
   const handleEditClick = (e) => {
-    setSelectedTeacherId(e.currentTarget.id);
-    dispatch(getTeacher(e.currentTarget.id))
+    setSelectedStudentId(e.currentTarget.id);
+    dispatch(getStudent(e.currentTarget.id));
   };
   return (
     <TableContainer component={Paper}>
@@ -142,8 +142,7 @@ export default function Teacherlist({ filteringItems }) {
             <StyledTableCell>No</StyledTableCell>
             <StyledTableCell>Firstname</StyledTableCell>
             <StyledTableCell>Lastname</StyledTableCell>
-            <StyledTableCell>Level</StyledTableCell>
-            <StyledTableCell>Groups</StyledTableCell>
+            <StyledTableCell>Group</StyledTableCell>
             <StyledTableCell align="right">Actions</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -160,13 +159,16 @@ export default function Teacherlist({ filteringItems }) {
               <TableCell style={{ width: "200px" }} component="th" scope="row">
                 {row.lastname}
               </TableCell>
-              <TableCell>{row.level}</TableCell>
-              <TableCell>{row.groups.join(",")}</TableCell>
+              <TableCell>{row.group}</TableCell>
               <TableCell align="right">
                 <Box display={"flex"} justifyContent={"flex-end"}>
                   <div onClick={handleEditClick} id={row.id}>
                     {" "}
-                    <TransitionsModal id={selectedTeacherId} typeModal={"edit"} namebtn={"Edit"} />
+                    <TransitionsModal
+                      id={selectedStudentId}
+                      typeModal={"edit"}
+                      namebtn={"Edit"}
+                    />
                   </div>
 
                   <Button

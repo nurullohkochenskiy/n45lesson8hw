@@ -17,7 +17,7 @@ export const mainListItems = (
         <ListItemText primary="Teachers" />
       </ListItemButton>
     </Link>
-    <Link to={"/"} style={{ textDecoration: "none", color: "black" }}>
+    <Link to={"/students"} style={{ textDecoration: "none", color: "black" }}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />

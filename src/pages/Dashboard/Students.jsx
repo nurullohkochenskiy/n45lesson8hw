@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchStudents, filterStudent } from "../../redux/students/studentsActions";
 import Dashboard from "../../components/Dashboard";
-import Teacherlist from "../../components/Teacherlist";
 import {  Stack } from "@mui/material";
 
-import FilterTeacher from "../../components/FilterTeacher";
-import TransitionsModal from "../../components/Modal";
-import SearchBar from "../../components/SearchBar";
+import TransitionsModal from "../../components/StudentsModal";
+import FilterStudent from "../../components/FilterStudent";
+import Studentlist from "../../components/Studentlist";
+import StudentsSearch from "../../components/StudentsSearch";
 
 const Students = () => {
   const [filteringItems, setFilteringItems] = useState({
@@ -31,13 +31,13 @@ const Students = () => {
         spacing={2}
         mb={5}
       >
-        <SearchBar filteringItems={filteringItems} setFilteringItems={setFilteringItems} />
+        <StudentsSearch filteringItems={filteringItems} setFilteringItems={setFilteringItems} />
         <TransitionsModal typeModal={"add"} namebtn = {"Add a student"}/>
           
-        <FilterTeacher filteringItems={filteringItems} setFilteringItems={setFilteringItems} />
+        <FilterStudent filteringItems={filteringItems} setFilteringItems={setFilteringItems} />
       </Stack>
 
-      <Teacherlist filteringItems={filteringItems} />
+      <Studentlist filteringItems={filteringItems} />
     </Dashboard>
   );
 };

@@ -8,7 +8,7 @@ import Dashboard from "../../components/Dashboard";
 import Teacherlist from "../../components/Teacherlist";
 import { Stack } from "@mui/material";
 import FilterTeacher from "../../components/FilterTeacher";
-import TransitionsModal from "../../components/Modal";
+import TransitionsModal from "../../components/TeachersModal";
 import SearchBar from "../../components/SearchBar";
 
 const Teachers = () => {

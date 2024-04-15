@@ -15,7 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {  editTeacher } from "../redux/teachers/teachersActions";
+import { createStudent, editStudent } from "../redux/students/studentsActions";
 import { useForm, Controller } from "react-hook-form";
 
 const style = {
@@ -38,12 +38,11 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
-  const { foundTeacher } = useSelector((state) => state.teachers);
-  const groups = ["n45", "n46"];
+  const { foundStudent } = useSelector((state) => state.students);
 
   const handleClose = () => {
     setOpen(false);
-    reset(); 
+    reset();
   };
   const handleModalOpen = () => {
     setOpen(true);
@@ -51,10 +50,15 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
 
   const onSubmit = (data) => {
     const fixedData = { id: id, ...data };
-    dispatch(editTeacher(fixedData));
+    dispatch(editStudent(fixedData));
+    handleClose();
+    window.location.reload();
+  };
+  const onSubmitAdd = (data) => {
+    dispatch(createStudent(data));
     handleClose();
   };
-  console.log(foundTeacher);
+  console.log(foundStudent);
   return (
     <div>
       <Button variant="contained" onClick={handleModalOpen}>
@@ -74,12 +78,20 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
         }}
       >
         <Fade in={open}>
-          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={style}>
+          <Box
+            component="form"
+            onSubmit={
+              typeModal == "add"
+                ? handleSubmit(onSubmitAdd)
+                : handleSubmit(onSubmit)
+            }
+            sx={style}
+          >
             <Controller
               name="firstname"
               control={control}
               defaultValue={
-                typeModal == "add" ? "" : `${foundTeacher.firstname}`
+                typeModal == "add" ? "" : `${foundStudent.firstname}`
               }
               rules={{ required: "First name is required" }}
               render={({ field }) => (
@@ -98,7 +110,7 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
               name="lastname"
               control={control}
               defaultValue={
-                typeModal == "add" ? "" : `${foundTeacher.lastname}`
+                typeModal == "add" ? "" : `${foundStudent.lastname}`
               }
               rules={{ required: "Last name is required" }}
               render={({ field }) => (
@@ -113,74 +125,39 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
                 />
               )}
             />
+
             <Controller
-              name="level"
+              name="group"
               control={control}
-              defaultValue={typeModal == "add" ? "" : `${foundTeacher.level}`}
-              rules={{ required: "Level is required" }}
+              defaultValue={typeModal == "add" ? "" : `${foundStudent.group}`}
+              rules={{ required: "Group is required" }}
               render={({ field }) => (
                 <>
                   <InputLabel sx={{ mt: 2 }} id="demo-multiple-checkbox-label">
-                    Level:
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    {...field}
-                    required
-                    label="Level"
-                    placeholder="Choose level"
-                    error={!!errors.level}
-                    sx={{
-                      mb: 2,
-                      minWidth: 120,
-                      borderColor: errors.level ? "red" : undefined,
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={"junior"}>Junior</MenuItem>
-                    <MenuItem value={"middle"}>Middle</MenuItem>
-                    <MenuItem value={"senior"}>Senior</MenuItem>
-                  </Select>
-                </>
-              )}
-            />
-
-            <Controller
-              name="groups"
-              control={control}
-              defaultValue={typeModal == "add" ? [] : foundTeacher.groups}
-              rules={{ required: "At least one group must be selected" }}
-              render={({ field }) => (
-                <>
-                  <InputLabel id="demo-multiple-checkbox-label">
-                    Groups:
+                    Group:
                   </InputLabel>
                   <Select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     {...field}
-                    multiple
-                    label="Groups"
-                    input={<OutlinedInput />}
-                    renderValue={(selected) => selected.join(", ")}
-                    error={!!errors.groups}
+                    required
+                    label="Group"
+                    placeholder="Choose group"
+                    error={!!errors.group}
                     sx={{
+                      mb: 2,
                       minWidth: 120,
-                      borderColor: errors.groups ? "red" : undefined,
+                      borderColor: errors.group ? "red" : undefined,
                     }}
                   >
-                    {groups.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={field.value.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={"n45"}>n45</MenuItem>
+                    <MenuItem value={"n46"}>n46</MenuItem>
                   </Select>
-                  {errors.groups && (
-                    <Typography color="red">{errors.groups.message}</Typography>
+                  {errors.group && (
+                    <Typography color="red">{errors.group.message}</Typography>
                   )}
                 </>
               )}
