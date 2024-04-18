@@ -1,9 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  fetchTeachers,
-  filterTeacher,
-} from "../../redux/teachers/teachersActions";
+import React, { useState } from "react";
 import Dashboard from "../../components/Dashboard";
 import Teacherlist from "../../components/Teacherlist";
 import { Stack } from "@mui/material";
@@ -17,10 +12,7 @@ const Teachers = () => {
     levelFilt: "",
     groupPicker: [],
   });
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchTeachers());
-  }, [dispatch]);
+  
 
   return (
     <Dashboard>

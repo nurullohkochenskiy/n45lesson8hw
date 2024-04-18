@@ -59,7 +59,7 @@ export default function TransitionsModal({ id, typeModal, namebtn }) {
     dispatch(createTeacher(data));
     handleClose();
   };
-  console.log(foundTeacher);
+ 
   return (
     <div>
       <Button variant="contained" onClick={handleModalOpen}>

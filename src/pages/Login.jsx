@@ -44,6 +44,7 @@ const Login = () => {
     if (data.username.length >= 3 && data.password.length >= 3) {
       dispatch(login(data));
       navigate("/");
+      window.location.reload();
     }
   };
   

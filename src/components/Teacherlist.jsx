@@ -111,10 +111,12 @@ export default function Teacherlist({ filteringItems }) {
     const { id, firstname, lastname, level, groups } = teacher;
     return createData(index, id, firstname, lastname, level, groups);
   });
-  const filteredRows = filtered.map((teacher, index) => {
-    const { id, firstname, lastname, level, groups } = teacher;
-    return createData(index, id, firstname, lastname, level, groups);
-  });
+  const filteredRows = filtered.length
+    ? filtered.map((teacher, index) => {
+        const { id, firstname, lastname, level, groups } = teacher;
+        return createData(index, id, firstname, lastname, level, groups);
+      })
+    : [];
   const { filteredStatus } = useSelector((state) => state.teachers);
   const rows = filteredStatus ? filteredRows : allRows;
 
@@ -132,7 +134,7 @@ export default function Teacherlist({ filteringItems }) {
   };
   const handleEditClick = (e) => {
     setSelectedTeacherId(e.currentTarget.id);
-    dispatch(getTeacher(e.currentTarget.id))
+    dispatch(getTeacher(e.currentTarget.id));
   };
   return (
     <TableContainer component={Paper}>
@@ -166,7 +168,11 @@ export default function Teacherlist({ filteringItems }) {
                 <Box display={"flex"} justifyContent={"flex-end"}>
                   <div onClick={handleEditClick} id={row.id}>
                     {" "}
-                    <TransitionsModal id={selectedTeacherId} typeModal={"edit"} namebtn={"Edit"} />
+                    <TransitionsModal
+                      id={selectedTeacherId}
+                      typeModal={"edit"}
+                      namebtn={"Edit"}
+                    />
                   </div>
 
                   <Button

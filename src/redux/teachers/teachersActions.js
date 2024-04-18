@@ -17,6 +17,7 @@ export const fetchTeachersRequest = () => {
 };
 
 export const fetchTeachersSuccess = (teachers) => {
+  localStorage.setItem("teachers", JSON.stringify(teachers));
   return {
     type: FETCH_TEACHERS_SUCCESS,
     payload: teachers,

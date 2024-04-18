@@ -14,10 +14,9 @@ import Link from "@mui/material/Link";
 import { Link as Linka } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { mainListItems } from "./listItems";
 import { Paper } from "@mui/material";
 import { useSelector } from "react-redux";
-
+import MainListItems from './listItems'
 //! Template's default codes start
 function Copyright(props) {
   return (
@@ -144,7 +143,7 @@ const Dashboard = ({ children }) => {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItems/>
             <Divider sx={{ my: 1 }} />
           </List>
         </Drawer>

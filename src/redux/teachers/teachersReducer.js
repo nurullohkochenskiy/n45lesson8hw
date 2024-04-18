@@ -27,7 +27,7 @@ const teachersReducer = (state = initialState, action) => {
         loading: true,
       };
     case FETCH_TEACHERS_SUCCESS:
-      localStorage.setItem("teachers", JSON.stringify(action.payload));
+     
       return {
         loading: false,
         teachers: action.payload,

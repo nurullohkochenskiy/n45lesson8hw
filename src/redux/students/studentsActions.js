@@ -16,10 +16,11 @@ export const fetchStudentsRequest = () => {
   };
 };
 
-export const fetchStudentsSuccess = (teachers) => {
+export const fetchStudentsSuccess = (students) => {
+  localStorage.setItem("students", JSON.stringify(students));
   return {
     type: FETCH_STUDENTS_SUCCESS,
-    payload: teachers,
+    payload: students,
   };
 };
 
